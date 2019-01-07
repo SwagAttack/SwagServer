@@ -42,7 +42,7 @@ container.register(LolKey).toAsyncFactory((context) => {
     };
 })
 
-// container.unRegister("fek");
+// This results in an exception being thrown due to circular dependency in person
 const lol: () => Promise<Person> = container.get(LolKey);
 
 // tslint:disable-next-line:no-console

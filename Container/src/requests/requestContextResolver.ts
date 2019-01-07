@@ -17,12 +17,12 @@ class RequestContextResolver implements interfaces.RequestContextResolver {
         const bindings = request.containerBindings;
         const childRequests = request.children;
 
-        const currentisArray = request.injectionTarget.isMultiInject();
-        const parentIsNotArray = request.parent === undefined ||
+        const isMultiInject = request.injectionTarget.isMultiInject();
+        const parentIsNotMultiInject = request.parent === undefined ||
                                  !request.parent.injectionTarget.matchesMultiInject(request.serviceIdentifier);
 
         // Current request is entry point to a multi-injection
-        if (currentisArray && parentIsNotArray) {
+        if (isMultiInject && parentIsNotMultiInject) {
 
             const result: T[] = childRequests.map((req) => {
                 return this._resolve(req, context) as T;
