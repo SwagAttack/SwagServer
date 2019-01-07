@@ -1,0 +1,19 @@
+{
+  "name": "container",
+  "version": "1.0.0",
+  "description": "IoC container for SwagJs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-node": "^7.0.1",
+    "tslint": "^5.12.0",
+    "typescript": "^3.2.2"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.12"
+  }
+}
