@@ -1,4 +1,4 @@
-export const enum MetadataKeys {
+const enum MetadataKeys {
 
     /**
      * Key describing a simple injection target
@@ -21,3 +21,5 @@ export const enum MetadataKeys {
     ClassProperty = "swagjs:class_prop",
 
 }
+
+export { MetadataKeys };
