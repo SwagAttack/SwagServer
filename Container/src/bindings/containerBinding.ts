@@ -1,13 +1,5 @@
+import { uniqueId } from "../identifiers/uniqueId";
 import { BindingScopeEnum, BindingTypeEnum, interfaces } from "../types";
-
-function generateBindingId(): number {
-
-    const counterStore: any = generateBindingId;
-    const counter = (counterStore.id || 0) + 1;
-    counterStore.id = counter;
-    return counter;
-
-}
 
 class ContainerBinding implements interfaces.ContainerBinding {
 
@@ -25,7 +17,7 @@ class ContainerBinding implements interfaces.ContainerBinding {
     public constructor(
         identifier: interfaces.ServiceIdentifier,
     ) {
-        this.bindingId = generateBindingId();
+        this.bindingId = uniqueId();
         this.serviceIdentifier = identifier;
     }
 

@@ -1,5 +1,6 @@
 import { ContainerBinding } from "../bindings/containerBinding";
 import { ContainerRegistration } from "../bindings/containerRegistration";
+import { ServiceIdentifier } from "../identifiers/serviceIdentifier";
 import { InjectionTargetFactory } from "../metadata/injectionTargetFactory";
 import { RequestContextBuilder } from "../requests/requestContextBuilder";
 import { RequestContextResolver } from "../requests/requestContextResolver";
@@ -33,7 +34,7 @@ class Container implements interfaces.Container {
 
     public constructor() {
 
-        this._bindingStore = new Store();
+        this._bindingStore = new Store((identifier) => identifier.id);
         this._targetFactory = new InjectionTargetFactory();
 
         this._contextBuilder = new RequestContextBuilder()
@@ -44,12 +45,12 @@ class Container implements interfaces.Container {
 
     }
 
-    public get<T>(identifier: interfaces.ServiceIdentifier): T {
-        return this._buildAndResolveRequest(identifier, false);
+    public get<T>(id: interfaces.ServiceId): T {
+        return this._buildAndResolveRequest(new ServiceIdentifier(id), false);
     }
 
-    public getMany<T>(identifier: interfaces.ServiceIdentifier): T[] {
-        return this._buildAndResolveRequest(identifier, true);
+    public getMany<T>(id: interfaces.ServiceId): T[] {
+        return this._buildAndResolveRequest(new ServiceIdentifier(id), true);
     }
 
     public resolve<T>(service: interfaces.TypeOf<T>): T {
@@ -60,19 +61,26 @@ class Container implements interfaces.Container {
 
     }
 
-    public register(identifier: interfaces.ServiceIdentifier): interfaces.ContainerRegistration {
+    public register(id: interfaces.ServiceId): interfaces.ContainerRegistration {
+
+        const identifier = new ServiceIdentifier(id);
         const binding = new ContainerBinding(identifier);
         this._bindingStore.add(identifier, binding);
         return new ContainerRegistration(binding);
+
     }
 
-    public unRegister(identifier: interfaces.ServiceIdentifier): void {
+    public unRegister(id: interfaces.ServiceId): void {
+
         // Should it throw if the identifier isen't found?
+        const identifier = new ServiceIdentifier(id);
         this._bindingStore.remove(identifier);
+
     }
 
-    public reRegister(identifier: interfaces.ServiceIdentifier): void {
+    public reRegister(id: interfaces.ServiceId): void {
 
+        const identifier = new ServiceIdentifier(id);
         const oldBindings = this._bindingStore.get(identifier);
         this._bindingStore.remove(identifier);
         oldBindings.forEach((binding) => this._bindingStore.add(identifier, binding.clone()));

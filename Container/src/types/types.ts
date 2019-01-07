@@ -20,14 +20,19 @@ export const enum BindingScopeEnum {
 export namespace interfaces {
 
     export type TypeOf<T> = new(...args: any[]) => T;
+
     export interface Serializeable {
         toString(): string;
     }
+
     export interface Cloneable<T> {
         clone(): T;
     }
 
-    export type ServiceIdentifier = string | symbol;
+    export type ServiceId = string | symbol;
+    export interface ServiceIdentifier extends Serializeable {
+        id: ServiceId;
+    }
 
     export interface InjectMetadata {
         identifier: ServiceIdentifier;
@@ -171,11 +176,11 @@ export namespace interfaces {
 
     export interface Container {
         parent?: Container;
-        register(identifier: ServiceIdentifier): ContainerRegistration;
-        unRegister(identifier: ServiceIdentifier): void;
-        reRegister(identifier: ServiceIdentifier): void;
-        get<T>(identifier: ServiceIdentifier): T;
-        getMany<T>(identifier: ServiceIdentifier): T[];
+        register(identifier: ServiceId): ContainerRegistration;
+        unRegister(identifier: ServiceId): void;
+        reRegister(identifier: ServiceId): void;
+        get<T>(identifier: ServiceId): T;
+        getMany<T>(identifier: ServiceId): T[];
         resolve<T>(service: TypeOf<T>): T;
         createChildContainer(): Container;
     }

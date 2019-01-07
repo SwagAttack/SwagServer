@@ -27,7 +27,7 @@ class InjectionTarget implements interfaces.InjectionTarget {
 
     public matchesMultiInject(identifier: interfaces.ServiceIdentifier): boolean {
 
-        return this.isMultiInject() && identifier === this.getIdentifier();
+        return this.isMultiInject() && identifier.id === this.getIdentifier().id;
 
     }
 

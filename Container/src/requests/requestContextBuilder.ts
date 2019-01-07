@@ -2,7 +2,6 @@ import { MetadataKeys } from "../constants";
 import { InjectionTarget } from "../metadata/injectionTarget";
 import { InjectMetadata } from "../metadata/injectMetadata";
 import { BindingTypeEnum, InjectionTargetTypeEnum, interfaces } from "../types";
-import { identifierToString } from "../utils/functions";
 import { ContainerRequest } from "./containerRequest";
 import { RequestContext } from "./requestContext";
 
@@ -44,7 +43,7 @@ class RequestContextBuilder implements interfaces.RequestContextBuilder {
             // TODO: Need detailed error msg describing where the error happened
             if (error instanceof RangeError) {
                 const errorMsg = "A circular dependency was detected resolving identifier ";
-                throw new Error(errorMsg + `'${identifierToString(identifier)}'`);
+                throw new Error(errorMsg + `'${identifier.toString()}'`);
             }
 
             throw error;
@@ -140,13 +139,13 @@ class RequestContextBuilder implements interfaces.RequestContextBuilder {
     ) {
 
         if (bindings.length === 0) {
-            throw new Error(`No bindings found for identifier '${identifierToString(target.getIdentifier())}'`);
+            throw new Error(`No bindings found for identifier '${target.getIdentifier().toString()}'`);
         }
 
         // TODO: Better error messages
         if (!target.isMultiInject() && bindings.length > 1) {
             throw new Error("Ambigious bindings can't be resolved. "
-                + `A single binding was requested for identifier '${identifierToString(target.getIdentifier())}' `
+                + `A single binding was requested for identifier '${target.getIdentifier().toString()}' `
                 + "but several were found");
         }
 

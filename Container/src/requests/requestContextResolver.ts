@@ -1,5 +1,4 @@
 import { BindingScopeEnum, BindingTypeEnum, InjectionTargetTypeEnum, interfaces } from "../types";
-import { identifierToString } from "../utils/functions";
 
 class RequestContextResolver implements interfaces.RequestContextResolver {
 
@@ -76,7 +75,7 @@ class RequestContextResolver implements interfaces.RequestContextResolver {
 
             default:
                 const errorMsg = "Missing binding registration for identifier ";
-                throw new Error(errorMsg + `'${identifierToString(binding.serviceIdentifier)}'`);
+                throw new Error(errorMsg + `'${binding.serviceIdentifier.toString()}'`);
 
         }
 

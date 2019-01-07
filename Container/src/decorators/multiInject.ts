@@ -1,12 +1,14 @@
 import { MetadataKeys } from "../constants";
+import { ServiceIdentifier } from "../identifiers/serviceIdentifier";
 import { InjectMetadata } from "../metadata/injectMetadata";
 import { interfaces } from "../types";
 import { decorateClassProperty, decorateConstructorParameter } from "./decoratorUtil";
 
-function multiInject(identifier: interfaces.ServiceIdentifier) {
+function multiInject(id: interfaces.ServiceId) {
 
     return (target: any, property: string, index?: number) => {
 
+        const identifier = new ServiceIdentifier(id);
         const metadata = new InjectMetadata(MetadataKeys.MultiInject, identifier);
 
         if (typeof index === "number") {
