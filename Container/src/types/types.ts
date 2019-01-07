@@ -20,9 +20,12 @@ export const enum BindingScopeEnum {
 export namespace interfaces {
 
     export type TypeOf<T> = new(...args: any[]) => T;
+    export interface Serializeable {
+        toString(): string;
+    }
     export interface Cloneable<T> {
         clone(): T;
-    } 
+    }
 
     export type ServiceIdentifier = string | symbol;
 
@@ -151,7 +154,9 @@ export namespace interfaces {
     export interface RequestContextBuilder {
 
         setTargetFactory(targetFactory: InjectionTargetFactory): RequestContextBuilder;
-        setBindingFactory(bindingFactory: (serviceIdentifier: ServiceIdentifier) => ContainerBinding[]): RequestContextBuilder;
+        setBindingFactory(
+            bindingFactory: (serviceIdentifier: ServiceIdentifier) => ContainerBinding[],
+        ): RequestContextBuilder;
 
         build(
             identifier: ServiceIdentifier,
@@ -165,6 +170,7 @@ export namespace interfaces {
     }
 
     export interface Container {
+        parent?: Container;
         register(identifier: ServiceIdentifier): ContainerRegistration;
         unRegister(identifier: ServiceIdentifier): void;
         reRegister(identifier: ServiceIdentifier): void;
@@ -172,7 +178,6 @@ export namespace interfaces {
         getMany<T>(identifier: ServiceIdentifier): T[];
         resolve<T>(service: TypeOf<T>): T;
         createChildContainer(): Container;
-        parent?: Container;
     }
 
     export interface ContainerRegistration {
@@ -180,7 +185,7 @@ export namespace interfaces {
         /**
          * Registers the service as a request singleton (request scope)
          */
-        to<T>(service: TypeOf<T>): void
+        to<T>(service: TypeOf<T>): void;
         toTransient<T>(service: TypeOf<T>): void;
         toSingleton<T>(service: TypeOf<T>): void;
         toConstant<T>(obj: T): void;

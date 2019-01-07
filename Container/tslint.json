@@ -1,15 +1,13 @@
 {
-    "defaultSeverity": "error",
     "extends": [
         "tslint:recommended"
     ],
-    "jsRules": {},
     "rules": {
         "eofline": false,
         "member-access": true,
         "no-namespace": false,
         "interface-name": false,
-        "no-unused-variable": [true, {"ignore-pattern": "^_"}],
-    },
-    "rulesDirectory": []
+        "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
+        "semicolon": true
+    }
 }

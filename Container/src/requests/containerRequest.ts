@@ -2,7 +2,7 @@ import { interfaces } from "../types";
 
 class ContainerRequest implements interfaces.ContainerRequest {
 
-    public serviceIdentifier: interfaces.ServiceIdentifier;    
+    public serviceIdentifier: interfaces.ServiceIdentifier;
 
     public parent?: interfaces.ContainerRequest;
     public children: interfaces.ContainerRequest[];
@@ -26,9 +26,9 @@ class ContainerRequest implements interfaces.ContainerRequest {
     public addChild(
         identifier: interfaces.ServiceIdentifier,
         target: interfaces.InjectionTarget,
-        bindings: interfaces.ContainerBinding[]
+        bindings: interfaces.ContainerBinding[],
     ): interfaces.ContainerRequest {
-        
+
         const child = new ContainerRequest(identifier, target, bindings, this);
         this.children.push(child);
         return child;

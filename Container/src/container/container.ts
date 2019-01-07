@@ -1,12 +1,26 @@
-import { interfaces } from "../types";
+import { ContainerBinding } from "../bindings/containerBinding";
+import { ContainerRegistration } from "../bindings/containerRegistration";
+import { InjectionTargetFactory } from "../metadata/injectionTargetFactory";
 import { RequestContextBuilder } from "../requests/requestContextBuilder";
 import { RequestContextResolver } from "../requests/requestContextResolver";
+import { interfaces } from "../types";
 import { Store } from "./store";
-import { InjectionTargetFactory } from "../metadata/injectionTargetFactory";
-import { ContainerRegistration } from "../bindings/containerRegistration";
-import { ContainerBinding } from "../bindings/containerBinding";
 
 class Container implements interfaces.Container {
+
+    private static _getBindings(identifier: interfaces.ServiceIdentifier, container: Container) {
+
+        let bindings: interfaces.ContainerBinding[] = [];
+
+        if (container._bindingStore.has(identifier)) {
+            bindings = container._bindingStore.get(identifier);
+        } else if (container.parent !== undefined) {
+            bindings = Container._getBindings(identifier, container.parent);
+        }
+
+        return bindings;
+
+    }
 
     public parent?: Container | undefined;
 
@@ -29,7 +43,7 @@ class Container implements interfaces.Container {
         this._contextResolver = new RequestContextResolver();
 
     }
-    
+
     public get<T>(identifier: interfaces.ServiceIdentifier): T {
         return this._buildAndResolveRequest(identifier, false);
     }
@@ -87,20 +101,6 @@ class Container implements interfaces.Container {
 
     private _bindingFactory() {
         return (identifier: interfaces.ServiceIdentifier) => Container._getBindings(identifier, this);
-    }
-
-    private static _getBindings(identifier: interfaces.ServiceIdentifier, container: Container) {
-
-        let bindings: interfaces.ContainerBinding[] = [];
-
-        if (container._bindingStore.has(identifier)) {
-            bindings = container._bindingStore.get(identifier);
-        } else if (container.parent !== undefined) {
-            bindings = Container._getBindings(identifier, container.parent);
-        }
-
-        return bindings;
-
     }
 
 }

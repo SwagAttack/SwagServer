@@ -1,4 +1,4 @@
-import { interfaces, BindingScopeEnum, BindingTypeEnum } from "../types";
+import { BindingScopeEnum, BindingTypeEnum, interfaces } from "../types";
 
 class ContainerRegistration implements interfaces.ContainerRegistration {
 
@@ -10,16 +10,16 @@ class ContainerRegistration implements interfaces.ContainerRegistration {
 
     public to<T>(service: interfaces.TypeOf<T>): void {
         this._toInstance(BindingScopeEnum.RequestScope, service);
-    }    
-    
+    }
+
     public toTransient<T>(service: interfaces.TypeOf<T>): void {
         this._toInstance(BindingScopeEnum.Transient, service);
     }
-    
+
     public toSingleton<T>(service: interfaces.TypeOf<T>): void {
         this._toInstance(BindingScopeEnum.Singleton, service);
     }
-    
+
     public toConstant<T extends any>(obj: T): void {
         this._binding.bindingType = BindingTypeEnum.ConstantValue;
         this._binding.resolved = true;

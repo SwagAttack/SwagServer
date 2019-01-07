@@ -1,4 +1,4 @@
-import { interfaces, InjectionTargetTypeEnum, BindingTypeEnum, BindingScopeEnum } from "../types";
+import { BindingScopeEnum, BindingTypeEnum, InjectionTargetTypeEnum, interfaces } from "../types";
 import { identifierToString } from "../utils/functions";
 
 class RequestContextResolver implements interfaces.RequestContextResolver {
@@ -26,7 +26,7 @@ class RequestContextResolver implements interfaces.RequestContextResolver {
 
             const result: T[] = childRequests.map((req) => {
                 return this._resolve(req, context) as T;
-            })
+            });
 
             return result;
 
@@ -65,20 +65,21 @@ class RequestContextResolver implements interfaces.RequestContextResolver {
                     binding.cache = service;
                     binding.resolved = true;
                 }
-    
+
                 if (isRequestSingleton) {
                     requestScope.set(binding.bindingId, service);
                 }
-    
+
                 return service;
 
             }
 
-            default: 
-                throw new Error(`Missing binding registration for identifier '${identifierToString(binding.serviceIdentifier)}'`);
+            default:
+                const errorMsg = "Missing binding registration for identifier ";
+                throw new Error(errorMsg + `'${identifierToString(binding.serviceIdentifier)}'`);
 
         }
-        
+
     }
 
     private _constructInstance<T>(

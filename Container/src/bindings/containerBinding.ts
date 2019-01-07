@@ -1,10 +1,10 @@
-import { interfaces, BindingScopeEnum, BindingTypeEnum } from "../types";
+import { BindingScopeEnum, BindingTypeEnum, interfaces } from "../types";
 
-function generateBindingId() : number {
-    
+function generateBindingId(): number {
+
     const counterStore: any = generateBindingId;
-    const counter = (counterStore["id"] || 0) + 1;
-    counterStore["id"] = counter;
+    const counter = (counterStore.id || 0) + 1;
+    counterStore.id = counter;
     return counter;
 
 }
@@ -13,7 +13,7 @@ class ContainerBinding implements interfaces.ContainerBinding {
 
     public bindingId: number;
     public serviceIdentifier: interfaces.ServiceIdentifier;
-    
+
     public bindingType: BindingTypeEnum;
 
     public bindingScope?: BindingScopeEnum | undefined;

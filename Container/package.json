@@ -1,14 +1,18 @@
 {
   "name": "container",
   "version": "1.0.0",
-  "description": "IoC container for SwagJs",
-  "main": "index.js",
+  "description": "IoC container for SwagServer",
+  "main": "bin/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "tslint --project tsconfig.json",
+    "clean": "rimraf bin",
+    "build": "npm run clean && tsc"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "rimraf": "^2.6.3",
     "ts-node": "^7.0.1",
     "tslint": "^5.12.0",
     "typescript": "^3.2.2"

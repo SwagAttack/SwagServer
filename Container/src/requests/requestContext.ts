@@ -1,7 +1,7 @@
 import { interfaces } from "../types";
 
 class RequestContext implements interfaces.RequestContext {
-    
+
     public requestScope: Map<any, any>;
     public container: interfaces.Container;
 

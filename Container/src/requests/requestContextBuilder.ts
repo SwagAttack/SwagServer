@@ -1,10 +1,10 @@
-import { interfaces, InjectionTargetTypeEnum, BindingTypeEnum } from "../types";
-import { RequestContext } from "./requestContext";
-import { ContainerRequest } from "./containerRequest";
+import { MetadataKeys } from "../constants";
 import { InjectionTarget } from "../metadata/injectionTarget";
 import { InjectMetadata } from "../metadata/injectMetadata";
-import { MetadataKeys } from "../constants";
+import { BindingTypeEnum, InjectionTargetTypeEnum, interfaces } from "../types";
 import { identifierToString } from "../utils/functions";
+import { ContainerRequest } from "./containerRequest";
+import { RequestContext } from "./requestContext";
 
 class RequestContextBuilder implements interfaces.RequestContextBuilder {
 
@@ -22,7 +22,7 @@ class RequestContextBuilder implements interfaces.RequestContextBuilder {
         this._bindingFactory = bindingFactory;
         return this;
     }
-    
+
     public build(
         identifier: interfaces.ServiceIdentifier,
         isMultiInject: boolean,
@@ -38,14 +38,15 @@ class RequestContextBuilder implements interfaces.RequestContextBuilder {
 
         try {
             this._buildChildRequests(context, undefined, rootTarget);
-        } catch(error) {
+        } catch (error) {
 
             // Circular dependency - max stack size reached
             // TODO: Need detailed error msg describing where the error happened
             if (error instanceof RangeError) {
-                throw new Error(`A circular dependency was detected resolving identifier '${identifierToString(identifier)}'`);
+                const errorMsg = "A circular dependency was detected resolving identifier ";
+                throw new Error(errorMsg + `'${identifierToString(identifier)}'`);
             }
-        
+
             throw error;
 
         }
@@ -74,12 +75,12 @@ class RequestContextBuilder implements interfaces.RequestContextBuilder {
     ): void {
 
         const identifier = target.getIdentifier();
-        
+
         let childRequest: interfaces.ContainerRequest;
         const childBindings: interfaces.ContainerBinding[] = this._getAndValidateBindings(target);
 
         if (parentRequest === undefined) {
- 
+
             childRequest = new ContainerRequest(identifier, target, childBindings);
             context.setRootRequest(childRequest);
 
@@ -114,8 +115,8 @@ class RequestContextBuilder implements interfaces.RequestContextBuilder {
                     ... this._targetFactory.getPropertyTargets(binding.implementation),
                 ];
 
-                newTargets.forEach((target) => {
-                    this._buildChildRequests(context, subChild, target);
+                newTargets.forEach((newtarget) => {
+                    this._buildChildRequests(context, subChild, newtarget);
                 });
 
             }
@@ -144,8 +145,9 @@ class RequestContextBuilder implements interfaces.RequestContextBuilder {
 
         // TODO: Better error messages
         if (!target.isMultiInject() && bindings.length > 1) {
-            throw new Error("Ambigious bindings can't be resolved. " +
-                `A single binding was requested for identifier '${identifierToString(target.getIdentifier())}' but several were found`);
+            throw new Error("Ambigious bindings can't be resolved. "
+                + `A single binding was requested for identifier '${identifierToString(target.getIdentifier())}' `
+                + "but several were found");
         }
 
         return bindings;
