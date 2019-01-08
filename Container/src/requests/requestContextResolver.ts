@@ -92,7 +92,6 @@ class RequestContextResolver implements interfaces.RequestContextResolver {
         });
 
         const constructorInjections: any = [];
-        constructorInjections.length = constructor.length;
 
         constructorParamRequests.forEach((req) => {
             constructorInjections[req.injectionTarget.propertyKeyOrIndex!] = this._resolve(req, context);

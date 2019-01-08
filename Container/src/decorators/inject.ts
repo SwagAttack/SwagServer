@@ -1,14 +1,21 @@
 import { MetadataKeys } from "../constants";
-import { ServiceIdentifier } from "../identifiers/serviceIdentifier";
 import { InjectMetadata } from "../metadata/injectMetadata";
 import { interfaces } from "../types";
+import { isValidIdentifier } from "../util/validation";
 import { decorateClassProperty, decorateConstructorParameter } from "./decoratorUtil";
 
-function inject(id: interfaces.ServiceId) {
+const enum ErrorMessages {
+    InvalidIdentifier = "Can't add invalid identifier to Container",
+}
+
+function inject(identifier: interfaces.ServiceIdentifier) {
+
+    if (!isValidIdentifier(identifier)) {
+        throw new Error(ErrorMessages.InvalidIdentifier);
+    }
 
     return (target: any, property: string, index?: number) => {
 
-        const identifier = new ServiceIdentifier(id);
         const metadata = new InjectMetadata(MetadataKeys.Inject, identifier);
 
         if (typeof index === "number") {

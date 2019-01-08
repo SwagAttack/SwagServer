@@ -21,18 +21,12 @@ export namespace interfaces {
 
     export type TypeOf<T> = new(...args: any[]) => T;
 
-    export interface Serializeable {
-        toString(): string;
-    }
-
     export interface Cloneable<T> {
         clone(): T;
     }
 
-    export type ServiceId = string | symbol;
-    export interface ServiceIdentifier extends Serializeable {
-        id: ServiceId;
-    }
+    export type ServiceIdentifier = string | symbol;
+    export type UniqueIdentifier = number;
 
     export interface InjectMetadata {
         identifier: ServiceIdentifier;
@@ -73,9 +67,9 @@ export namespace interfaces {
         /**
          * Unique identifier for the binding
          */
-        bindingId: number;
+        bindingId: UniqueIdentifier;
 
-        /**Eeeee
+        /**
          * Identifier for the service to which the binding refers
          */
         serviceIdentifier: ServiceIdentifier;
@@ -176,11 +170,11 @@ export namespace interfaces {
 
     export interface Container {
         parent?: Container;
-        register(identifier: ServiceId): ContainerRegistration;
-        unRegister(identifier: ServiceId): void;
-        reRegister(identifier: ServiceId): void;
-        get<T>(identifier: ServiceId): T;
-        getMany<T>(identifier: ServiceId): T[];
+        register(identifier: ServiceIdentifier): ContainerRegistration;
+        unRegister(identifier: ServiceIdentifier): void;
+        reRegister(identifier: ServiceIdentifier): void;
+        get<T>(identifier: ServiceIdentifier): T;
+        getMany<T>(identifier: ServiceIdentifier): T[];
         resolve<T>(service: TypeOf<T>): T;
         createChildContainer(): Container;
     }

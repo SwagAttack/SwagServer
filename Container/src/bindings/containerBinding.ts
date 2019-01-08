@@ -3,7 +3,7 @@ import { BindingScopeEnum, BindingTypeEnum, interfaces } from "../types";
 
 class ContainerBinding implements interfaces.ContainerBinding {
 
-    public bindingId: number;
+    public bindingId: interfaces.UniqueIdentifier;
     public serviceIdentifier: interfaces.ServiceIdentifier;
 
     public bindingType: BindingTypeEnum;

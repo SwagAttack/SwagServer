@@ -1,64 +1,63 @@
 import { interfaces } from "../types";
-import { Dictionary, KeyIndexer } from "./dictionary";
 
 class Store<Key, Value extends interfaces.Cloneable<Value>> implements interfaces.Store<Key, Value> {
 
-    private _dictionary: Dictionary<Key, Value[]>;
+    private _map: Map<Key, Value[]>;
 
-    public constructor(indexer?: KeyIndexer<Key>) {
-        this._dictionary = new Dictionary(indexer);
+    public constructor() {
+        this._map = new Map();
     }
 
     public add(key: Key, value: Value): void {
 
-        if (this._dictionary.has(key)) {
-            this._dictionary.get(key)!.push(value);
+        if (this._map.has(key)) {
+            this._map.get(key)!.push(value);
         } else {
-            this._dictionary.set(key, [value]);
+            this._map.set(key, [value]);
         }
 
     }
 
     public get(key: Key): Value[] {
 
-        return this._dictionary.get(key)!;
+        return this._map.get(key)!;
 
     }
 
     public has(key: Key): boolean {
 
-        return this._dictionary.has(key);
+        return this._map.has(key);
 
     }
 
     public remove(key: Key): void {
 
-        this._dictionary.remove(key);
+        this._map.delete(key);
 
     }
 
     public removeBy(condition: (value: Value, key: Key) => boolean): void {
 
-        this._dictionary.forEach((values, key) => {
+        this._map.forEach((values, key) => {
             const toKeep = values.filter((value) => !condition(value, key));
             if (toKeep.length) {
-                this._dictionary.set(key, toKeep);
+                this._map.set(key, toKeep);
             } else {
-                this._dictionary.remove(key);
+                this._map.delete(key);
             }
         });
 
     }
 
     public apply(iterator: (values: Value[], key: Key) => void): void {
-        this._dictionary.forEach(iterator);
+        this._map.forEach(iterator);
     }
 
     public clone(): interfaces.Store<Key, Value> {
 
         const clone = new Store<Key, Value>();
 
-        this._dictionary.forEach((values, key) => {
+        this._map.forEach((values, key) => {
             values.forEach((value) => {
                 clone.add(key, value.clone());
             });
@@ -69,7 +68,7 @@ class Store<Key, Value extends interfaces.Cloneable<Value>> implements interface
     }
 
     public getMap(): Map<Key, Value[]> {
-        return this._dictionary.getMap();
+        return this._map;
     }
 
 }
