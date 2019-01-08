@@ -173,6 +173,7 @@ export namespace interfaces {
         register(identifier: ServiceIdentifier): ContainerRegistration;
         unRegister(identifier: ServiceIdentifier): void;
         reRegister(identifier: ServiceIdentifier): void;
+        reRegisterAll(): void;
         get<T>(identifier: ServiceIdentifier): T;
         getMany<T>(identifier: ServiceIdentifier): T[];
         resolve<T>(service: TypeOf<T>): T;

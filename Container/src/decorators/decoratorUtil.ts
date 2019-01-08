@@ -1,4 +1,4 @@
-import { MetadataKeys } from "../constants";
+import { ErrorMessages, MetadataKeys } from "../constants";
 import { interfaces } from "../types";
 
 function _decorateParamOrProperty(
@@ -14,7 +14,7 @@ function _decorateParamOrProperty(
 
     // Target is a function but not a constructor
     if (targetIsConstructorParam && propertyName !== undefined) {
-        throw new Error("Inject decorators can only be applied to constructor parameters or class properties");
+        throw new Error(ErrorMessages.InvalidInjectTarget);
     }
 
     let oldMetadataMap: interfaces.MetadataMap;
@@ -27,7 +27,7 @@ function _decorateParamOrProperty(
 
     // Target has already been decorated
     if (oldMetadataMap.has(metadataIndex)) {
-        throw new Error("A class property or constructor parameter can only be decorated once");
+        throw new Error(ErrorMessages.TargetAlreadyDecorated);
     } else {
         oldMetadataMap.set(metadataIndex, metadata);
     }

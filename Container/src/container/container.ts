@@ -80,6 +80,11 @@ class Container implements interfaces.Container {
 
     }
 
+    public reRegisterAll(): void {
+        const clonedStore = this._bindingStore.clone();
+        this._bindingStore = clonedStore;
+    }
+
     public createChildContainer(): interfaces.Container {
 
         const child = new Container();

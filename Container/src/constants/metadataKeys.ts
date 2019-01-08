@@ -1,4 +1,4 @@
-const enum MetadataKeys {
+enum MetadataKeys {
 
     /**
      * Key describing a simple injection target

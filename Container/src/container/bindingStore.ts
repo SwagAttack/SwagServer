@@ -1,13 +1,7 @@
+import { ErrorMessages } from "../constants";
 import { interfaces } from "../types";
 import { isUndefined, isValidIdentifier, isValidIterator } from "../util/validation";
 import { Store } from "./store";
-
-const enum ErrorMessages {
-    InvalidIdentifier = "Can't add invalid identifier to Container",
-    InvalidBinding = "Binding can't be undefined",
-    InvalidIterator = "Can't apply invalid iterator to Container",
-    IdentifierNotFound = "Identifier wasn't found",
-}
 
 class BindingStore extends Store<interfaces.ServiceIdentifier, interfaces.ContainerBinding>
     implements interfaces.BindingStore {
