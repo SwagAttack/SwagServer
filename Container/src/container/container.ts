@@ -8,17 +8,18 @@ import { BindingStore } from "./bindingStore";
 
 class Container implements interfaces.Container {
 
-    private static _getBindings(identifier: interfaces.ServiceIdentifier, container: Container) {
-
-        let bindings: interfaces.ContainerBinding[] = [];
+    private static _getBindings(
+        identifier: interfaces.ServiceIdentifier,
+        container: Container,
+    ): interfaces.ContainerBinding[] {
 
         if (container._bindingStore.has(identifier)) {
-            bindings = container._bindingStore.get(identifier);
+            return container._bindingStore.get(identifier);
         } else if (container.parent !== undefined) {
-            bindings = Container._getBindings(identifier, container.parent);
+            return Container._getBindings(identifier, container.parent);
         }
 
-        return bindings;
+        return [];
 
     }
 
