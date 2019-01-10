@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "IoC container for SwagServer",
   "main": "bin/index.js",
+  "types": "bin/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "tslint --project tsconfig.json",
     "clean": "rimraf bin",
-    "build": "npm run clean && tsc"
+    "build": "npm run clean && tsc",
+    "build-production": "npm run clean && tslint --project tsconfig.production.json && tsc --p tsconfig.production.json"
   },
   "author": "",
   "license": "ISC",

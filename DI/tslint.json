@@ -1,0 +1,14 @@
+{
+    "extends": [
+        "tslint:recommended"
+    ],
+    "rules": {
+        "eofline": false,
+        "member-access": true,
+        "no-namespace": false,
+        "interface-name": false,
+        "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
+        "semicolon": true,
+        "ban-types": false
+    }
+}
