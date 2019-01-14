@@ -1,92 +1,130 @@
-import { Injectable } from '@angular/core';
+
+import { environment } from './../../environments/environment';
+import { Injectable, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
-import { filter } from 'rxjs/operators';
 import * as auth0 from 'auth0-js';
-import { environment } from 'src/environments/environment';
+import { Subject } from 'rxjs';
+// import { UserRoles } from '../models/UserRoles';
 
 @Injectable()
 export class AuthService {
 
-  private _idToken: string;
-  private _accessToken: string;
-  private _expiresAt: number;
+  constructor(public navigationService: Router) { }
 
-  auth0 = new auth0.WebAuth({
+  private renewalInterval = 300; // Number of seconds betweem renewals
+  private loggedInSource = new Subject<any>();
+  public loggedIn$ = this.loggedInSource.asObservable();
+
+  auth0: any = new auth0.WebAuth({
     clientID: environment.clientID,
     domain: environment.domain,
     responseType: 'token id_token',
-    redirectUri: 'http://localhost:4200/loading',
-    scope: 'openid'
+    // audience: environment.audience,
+    redirectUri: environment.redirectUri,
+    scope: 'openid',
   });
 
-  constructor(public router: Router) {
-    this._idToken = '';
-    this._accessToken = '';
-    this._expiresAt = 0;
-  }
-
-  get accessToken(): string {
-    return this._accessToken;
-  }
-
-  get idToken(): string {
-    return this._idToken;
-  }
+  private tokenRenewalTimeout: any;
 
   public login(): void {
     this.auth0.authorize();
   }
 
-  public handleAuthentication(): void {
-    this.auth0.parseHash((err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
-        window.location.hash = '';
-        this.localLogin(authResult);
-        this.router.navigate(['/home']);
-      } else if (err) {
-        this.router.navigate(['/home']);
+  public renewToken() {
+    this.auth0.renewAuth({
+      // audience: environment.audience,
+      redirectUri: environment.redirectUri,
+    }, (err, result) => {
+      if (err) {
         console.log(err);
+      } else {
+        this.setSession(result);
       }
     });
   }
 
-  private localLogin(authResult): void {
-    // Set isLoggedIn flag in localStorage
-    localStorage.setItem('isLoggedIn', 'true');
-    // Set the time that the access token will expire at
-    const expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
-    this._accessToken = authResult.accessToken;
-    this._idToken = authResult.idToken;
-    this._expiresAt = expiresAt;
-  }
-
-  public renewTokens(): void {
-    this.auth0.checkSession({}, (err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
-        this.localLogin(authResult);
+  public handleAuthentication(): void {
+    this.auth0.parseHash((err, result) => {
+      if (result && result.accessToken && result.idToken) {
+        this.setSession(result);
+        this.navigationService.navigate(['/']);
       } else if (err) {
-        alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
-        this.logout();
+        this.navigationService.navigate(['/']);
+        console.log(err);
+        console.log(`Error: ${err.error}. Check the console for further details.`);
       }
     });
   }
+
+  private setSession(result): void {
+    const expiresAt = JSON.stringify((result.expiresIn * 1000) + new Date().getTime());
+    localStorage.setItem('access_token', result.accessToken);
+    localStorage.setItem('id_token', result.idToken);
+    localStorage.setItem('expires_at', expiresAt);
+
+    this.loggedInSource.next();
+
+    this.scheduleRenewal();
+  }
+
+  // public isAdmin() {
+  //   const token = localStorage.getItem('access_token');
+  //   if (!token) {
+  //     return false;
+  //   }
+
+  //   const jwt = this.parseJwt(token);
+  //   const roles = jwt["http://xys.swag.eu.lol"];
+
+  //   if (roles.indexOf(UserRoles.ADMIN) >= 0) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
+
+  // private parseJwt(token) {
+  //   const base64Url = token.split('.')[1];
+  //   const base64 = base64Url.replace('-', '+').replace('_', '/');
+  //   const parsed = JSON.parse(window.atob(base64));
+
+  //   return parsed;
+  // }
 
   public logout(): void {
-    // Remove tokens and expiry time
-    this._accessToken = '';
-    this._idToken = '';
-    this._expiresAt = 0;
-    // Remove isLoggedIn flag from localStorage
-    localStorage.removeItem('isLoggedIn');
-    // Go back to the home route
-    this.router.navigate(['/']);
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('id_token');
+    localStorage.removeItem('expires_at');
+    clearTimeout(this.tokenRenewalTimeout);
+
+    this.navigationService.navigate(['/']);
   }
 
   public isAuthenticated(): boolean {
-    // Check whether the current time is past the
-    // access token's expiry time
-    return new Date().getTime() < this._expiresAt;
+    const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
+    return new Date().getTime() < expiresAt;
   }
 
+  public waitForAuth() {
+    return new Promise((resolve, reject) => {
+      if (this.isAuthenticated()) {
+        return resolve();
+      }
 
+      this.loggedIn$.subscribe(() => {
+        return resolve();
+      });
+    });
+  }
+
+  public scheduleRenewal() {
+    const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
+    const timeDiff = expiresAt - Date.now();
+
+    if (this.isAuthenticated() && timeDiff > 0) {
+      this.tokenRenewalTimeout = setTimeout(() => {
+        this.renewToken();
+      }, timeDiff - this.renewalInterval);
+    }
+  }
 }

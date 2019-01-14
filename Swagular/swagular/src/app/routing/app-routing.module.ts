@@ -19,7 +19,7 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, {
     initialNavigation: 'enabled',
     scrollPositionRestoration: 'enabled',
-    anchorScrolling: 'enabled'
+    // anchorScrolling: 'enabled' // <-- messes with auth0
   })],
   exports: [RouterModule]
 })

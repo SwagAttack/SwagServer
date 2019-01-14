@@ -21,7 +21,7 @@ import { LoadingComponent } from './pages/loading/loading.component';
     LoginComponent,
     HomeComponent,
     NotFoundComponent,
-    LoadingComponent
+    LoadingComponent,
   ],
   imports: [
     NgxPopper,

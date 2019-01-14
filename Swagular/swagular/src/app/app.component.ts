@@ -10,13 +10,13 @@ export class AppComponent implements OnInit {
   title = 'swagular';
 
   constructor(public auth: AuthService) {
-    auth.handleAuthentication();
+    this.auth.handleAuthentication();
   }
 
   ngOnInit() {
 
     if (localStorage.getItem('isLoggedIn') === 'true') {
-      this.auth.renewTokens();
+      this.auth.scheduleRenewal();
     }
   }
 
