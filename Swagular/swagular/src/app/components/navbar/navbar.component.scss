@@ -1,0 +1,102 @@
+@import "../../../variables";
+
+// @media (min-width: 2000px) {
+//   .navbar-brand {
+//     margin-left: 25%;
+//   }
+//   .navbar-collapse{
+//     margin-right: 25%;
+//   }
+// }
+
+// .navbar-brand {
+//   font-weight: 600;
+// }
+
+// .navbar {
+//   z-index: 30;
+//   background: transparent;
+//   position: fixed;
+//   top: 0;
+//   width: 100%;
+//   -webkit-transition: background-color 330ms linear;
+//   -moz-transition: background-color 330ms linear;
+//   -o-transition: background-color 330ms linear;
+//   -ms-transition: background-color 330ms linear;
+//   transition: background-color 330ms linear;
+// }
+
+
+
+// @media only screen and (min-width: 991px) {
+//   .opaque {
+//     background-color: rgba(0, 0, 0, 0.8);
+//   }
+//   #navbarToggler {
+//     background: transparent !important;
+//   }
+// }
+
+// .navbar-toggler {
+//   outline: none;
+// }
+
+// .nav-item {
+//   z-index: 50;
+//   font-weight: 700;
+//   margin-right: 3.5em;
+// }
+
+// .last-item {
+//   margin-right: 0;
+// }
+
+// .logo {
+//   width: 130pt;
+// }
+
+// .navbar-dark .navbar-nav .nav-link {
+//   color: rgba(255, 255, 255, 1);
+// }
+
+
+.navbar-light .navbar-nav .nav-link.active-link{
+  color: $swag-color;
+}
+
+// @media (max-width: 991px) {
+//   .opaque {
+//     background-color: rgba(0, 0, 0, 0.8);
+//   }
+//   #navbarToggler {
+//     -webkit-transition: all 330ms linear;
+//     -moz-transition: all 330ms linear;
+//     -o-transition: all 330ms linear;
+//     -ms-transition: all 330ms linear;
+//     transition: all 330ms linear;  
+//     margin-left: -16px;
+//     margin-right: -16px;
+//     margin-bottom: 6rem;
+//     li {
+//       margin-left: 16px;
+//     }
+//     background-color: rgba(0, 0, 0, 0.8);  
+//   }
+//   .navbar-toggler {
+//     position: relative;
+//   }
+//   .navbar {
+//     position: fixed; /* added to support older browsers */
+//     position: -webkit-sticky;
+//     position: sticky;
+//     top: 0;
+//     height: calc(61px - 0.4rem);
+//     padding: 0.1rem 0.5rem; // padding-y must be this to behave nicely when everything as fixed. (used to be 0.275)
+//   }
+// }
+
+// @media only screen and (max-width: 1200px) {
+//   .logo {
+//     width: 100pt;
+//   }
+// }
