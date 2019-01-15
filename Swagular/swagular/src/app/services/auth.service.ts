@@ -4,7 +4,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import * as auth0 from 'auth0-js';
 import { Subject } from 'rxjs';
-// import { UserRoles } from '../models/UserRoles';
+import { UserRoles } from '../models/UserRoles';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +19,7 @@ export class AuthService {
     clientID: environment.clientID,
     domain: environment.domain,
     responseType: 'token id_token',
-    // audience: environment.audience,
+    audience: environment.audience,
     redirectUri: environment.redirectUri,
     scope: 'openid',
   });
@@ -32,7 +32,7 @@ export class AuthService {
 
   public renewToken() {
     this.auth0.renewAuth({
-      // audience: environment.audience,
+      audience: environment.audience,
       redirectUri: environment.redirectUri,
     }, (err, result) => {
       if (err) {
@@ -67,29 +67,29 @@ export class AuthService {
     this.scheduleRenewal();
   }
 
-  // public isAdmin() {
-  //   const token = localStorage.getItem('access_token');
-  //   if (!token) {
-  //     return false;
-  //   }
+  public isAdmin() {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      return false;
+    }
 
-  //   const jwt = this.parseJwt(token);
-  //   const roles = jwt["http://xys.swag.eu.lol"];
+    const jwt = this.parseJwt(token);
+    const roles = jwt['https://swagattack.eu/roles'];
 
-  //   if (roles.indexOf(UserRoles.ADMIN) >= 0) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
+    if (roles.indexOf(UserRoles.ADMIN) >= 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-  // private parseJwt(token) {
-  //   const base64Url = token.split('.')[1];
-  //   const base64 = base64Url.replace('-', '+').replace('_', '/');
-  //   const parsed = JSON.parse(window.atob(base64));
+  private parseJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace('-', '+').replace('_', '/');
+    const parsed = JSON.parse(window.atob(base64));
 
-  //   return parsed;
-  // }
+    return parsed;
+  }
 
   public logout(): void {
     localStorage.removeItem('access_token');

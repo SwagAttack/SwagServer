@@ -1,4 +1,4 @@
 export class UserRoles {
-    static readonly ADMIN = 'Admin';
-    static readonly USER = 'User';
+    static readonly ADMIN = 'admin';
+    static readonly USER = 'user';
 }
