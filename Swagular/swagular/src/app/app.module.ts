@@ -13,6 +13,8 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { NgxPopper } from 'angular-popper';
 import { AuthService } from './services/auth.service';
 import { LoadingComponent } from './pages/loading/loading.component';
+import { ChatService } from './services/chat.service';
+import { WebsocketService } from './services/websocket.service';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,6 @@ import { LoadingComponent } from './pages/loading/loading.component';
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [AuthService],
+  providers: [AuthService, ChatService, WebsocketService],
 })
 export class AppModule { }
