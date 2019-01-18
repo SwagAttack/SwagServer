@@ -1,3 +1,3 @@
 # SwagServer
 TODO:
-	- Everything
+	- Everything.
